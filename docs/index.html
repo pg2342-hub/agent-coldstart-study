@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent cold-start study</title>
+<meta name="description" content="8 fresh Claude Code runs were given a goal that needed an email inbox and no product name. 6 chose AgentMail, 6 signed up, 0 could prove receipt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#111;--muted:#555;--line:#ddd;--bg:#fff;--soft:#f5f5f5}
+@media (prefers-color-scheme:dark){:root{--fg:#eee;--muted:#aaa;--line:#333;--bg:#111;--soft:#1b1b1b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:40px 16px 64px}
+h1{font-size:30px;line-height:1.2;margin:0 0 10px;letter-spacing:-.01em}
+h2{font-size:20px;margin:44px 0 12px}
+p{margin:0 0 14px}
+.lede{color:var(--muted);font-size:17px;max-width:680px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:28px 0}
+.stat{border:1px solid var(--line);border-radius:10px;padding:16px}
+.stat b{display:block;font-size:34px;line-height:1.1}
+.stat span{color:var(--muted);font-size:14px}
+.funnel{margin:8px 0 6px}
+.row{display:grid;grid-template-columns:150px 1fr 48px;align-items:center;gap:10px;margin:8px 0;font-size:14px}
+.bar{height:14px;background:var(--soft);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--fg)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+.find{border-left:3px solid var(--fg);padding:2px 0 2px 14px;margin:18px 0}
+.find h3{margin:0 0 4px;font-size:16px}
+.find p{margin:0 0 6px;color:var(--muted)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--soft);padding:1px 5px;border-radius:4px}
+blockquote{margin:6px 0;padding:0 0 0 12px;border-left:2px solid var(--line);color:var(--muted);font-size:14px}
+a{color:inherit}
+footer{margin-top:48px;color:var(--muted);font-size:14px}
+@media (max-width:520px){.row{grid-template-columns:110px 1fr 40px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Can a fresh coding agent get itself a working inbox?</h1>
+<p class="lede">I gave 8 fresh Claude Code runs a goal that needed email and never named a product. Each started in an empty folder with no memory, no MCP servers, and no project context. The runs that chose AgentMail were then allowed to sign up with no human email attached. Run on 2026-11-19 with Claude Code 2.1.328, for about $6.90 in total.</p>
+
+<div class="stats">
+  <div class="stat"><b>6 of 8</b><span>chose AgentMail on their own</span></div>
+  <div class="stat"><b>6 of 6</b><span>signed up on the first try</span></div>
+  <div class="stat"><b>0 of 6</b><span>could prove the inbox receives mail</span></div>
+  <div class="stat"><b>~3 min</b><span>for a human's test email to arrive</span></div>
+</div>
+
+<h2>The funnel</h2>
+<div class="funnel">
+  <div class="row"><span>Goal given</span><div class="bar"><i style="width:100%"></i></div><span>8</span></div>
+  <div class="row"><span>Chose AgentMail</span><div class="bar"><i style="width:75%"></i></div><span>6</span></div>
+  <div class="row"><span>Signed up</span><div class="bar"><i style="width:75%"></i></div><span>6</span></div>
+  <div class="row"><span>Proved receipt</span><div class="bar"><i style="width:0%"></i></div><span>0</span></div>
+</div>
+<p>Sign-up was the easy part: HTTP 200 on the first try in every run, in 1 to 5 tool calls. Closing the loop was the hard part. An inbox with no human attached cannot send, even to itself, and outbound port 25 was blocked, so every run stopped and asked a person to send a test email. When one was sent, it arrived.</p>
+
+<h2>What each run did</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>Run</th><th>Goal (no product named)</th><th>Chose</th><th>How it found it</th><th>Sign-up</th></tr></thead>
+<tbody>
+<tr><td>G1</td><td>Inbox to read a SaaS verification code</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
+<tr><td>G2</td><td>Support bot that replies in thread</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
+<tr><td>G3</td><td>API inbox, prove it receives</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
+<tr><td>G4</td><td>50 per-user mailboxes</td><td>AgentMail (pods)</td><td>Prior knowledge</td><td>Signed up, no receipt</td></tr>
+<tr><td>G5</td><td>Python webhook on receive</td><td>Cloudflare Email Routing</td><td>Saw it, filed it as "mostly paid"</td><td>Not run</td></tr>
+<tr><td>G6</td><td>Get around Gmail's limits</td><td>AgentMail ($20 plan)</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
+<tr><td>G7</td><td>Send and receive without Gmail</td><td>AgentMail</td><td>Prior knowledge</td><td>Signed up, no receipt</td></tr>
+<tr><td>G8</td><td>Throwaway inbox for a login code</td><td>Mail.tm (AgentMail fallback)</td><td>Wanted zero sign-up</td><td>Not run</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Where the agents got stuck</h2>
+<div class="find">
+  <h3>1. No way to prove receipt without a human (6 of 6)</h3>
+  <p>Self-send returns <code>403 message_rejected</code> ("not in allow list"), and direct SMTP to the MX timed out on port 25.</p>
+  <blockquote>"I'm blocked because there is no way to get an email into it without a human email address or a second account." (G2)</blockquote>
+</div>
+<div class="find">
+  <h3>2. Send limits disagree across sources</h3>
+  <p>The API reported <code>daily_send_limit: 0</code> for a no-human account; the sign-up limits page says 10 a day; discovery runs quoted 3,000 a month (llms.txt) and 100 a day (quickstart).</p>
+</div>
+<div class="find">
+  <h3>3. The rejection message leads with allow lists</h3>
+  <p>The <code>fix</code> text suggests adding recipients to the send allow list first and mentions the unverified-account rule only at the end. Two runs had to check the docs to find the real cause.</p>
+</div>
+<div class="find">
+  <h3>4. SDK and docs drift</h3>
+  <p>Docs show <code>inboxes.create(username=...)</code>; SDK 2.0.18 wants <code>request=CreateInboxRequest(...)</code>. The CLI path needs Node, so runs without it fell back to curl.</p>
+</div>
+
+<h2>What worked well</h2>
+<p>Discovery is strong. On generic queries, agentmail.to or docs.agentmail.to showed up in the first search results every time, two runs went to AgentMail from model knowledge, and runs read the agent-readable <code>.md</code> docs and llms.txt directly. Three runs noticed that many comparison pages were AgentMail's own posts and leaned on the API docs instead.</p>
+
+<h2>Limits</h2>
+<p>One model in one harness, one run per goal, on one network with port 25 blocked. It shows where a careful agent stops, not how often every agent would. Six receive-only test inboxes were created (pranav-coldstart-01 to 06) and no email was sent to anyone.</p>
+
+<footer>
+  <p>Goals, scripts, per-run tables, and tool-call traces: <a href="https://github.com/pg2342-hub/agent-coldstart-study">github.com/pg2342-hub/agent-coldstart-study</a></p>
+  <p>Pranav Gudise · <a href="https://www.linkedin.com/in/pranav-gudise/">LinkedIn</a></p>
+</footer>
+</main>
+</body>
+</html>

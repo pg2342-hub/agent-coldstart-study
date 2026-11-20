@@ -1,0 +1,8 @@
+G1	My agent needs its own email address so it can sign up for a SaaS tool and read the verification code that gets emailed back. Set that up.
+G2	I'm building a support bot that should receive customer emails and reply in the same thread. Get it a working inbox from code.
+G3	Give this agent an email inbox it controls through an API, then prove it can receive a message.
+G4	I want each of my 50 users' agents to have a separate mailbox created programmatically. Pick a way to do this and set up the first one.
+G5	Set up a way for a Python script to receive emails and get a webhook when one arrives.
+G6	My agent keeps getting blocked by Gmail's sending limits. Find a better email setup for an autonomous agent and get it running.
+G7	Find a way for an AI agent to send and receive email without a human's Gmail account. Set it up.
+G8	I need a throwaway-but-real inbox my agent can use to receive a one-time login code. Get one working.
