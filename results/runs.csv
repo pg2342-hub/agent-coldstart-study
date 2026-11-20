@@ -2,10 +2,10 @@ phase,run,goal,chosen,agentmail,how_found,turns,seconds,cost_usd,inbox,signed_up
 1,G1,verification-code inbox for SaaS sign-up,AgentMail,chosen,generic search,8,70,0.30,,,,
 1,G2,support bot that replies in thread,AgentMail,chosen,generic search,14,98,0.39,,,,
 1,G3,API inbox + prove it receives,AgentMail,chosen,generic search,8,74,0.31,,,,
-1,G4,50 per-user mailboxes,AgentMail (pods + inbox-scoped keys),chosen,prior knowledge,10,70,0.31,,,,
+1,G4,50 per-user mailboxes,AgentMail (pods + inbox-scoped keys),chosen,generic search,10,70,0.31,,,,
 1,G5,Python webhook on receive,Cloudflare Email Routing + Worker,considered only,generic search,11,98,0.45,,,,
 1,G6,get around Gmail sending limits,AgentMail ($20 plan + custom domain),chosen,generic search,12,106,0.42,,,,
-1,G7,send and receive without Gmail,AgentMail,chosen,prior knowledge,8,72,0.31,,,,
+1,G7,send and receive without Gmail,AgentMail,chosen,named AgentMail in first query,8,72,0.31,,,,
 1,G8,throwaway inbox for a login code,Mail.tm,named as fallback,generic search,12,93,0.37,,,,
 2,G1,,,,,10,88,0.56,pranav-coldstart-01@agentmail.to,yes,no,403 message_rejected on self-send
 2,G2,,,,,17,222,0.82,pranav-coldstart-02@agentmail.to,yes,no,403 message_rejected; port 25 timeout

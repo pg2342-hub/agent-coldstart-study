@@ -49,7 +49,7 @@ footer{margin-top:48px;color:var(--muted);font-size:14px}
   <div class="stat"><b>6 of 8</b><span>chose AgentMail on their own</span></div>
   <div class="stat"><b>6 of 6</b><span>signed up on the first try</span></div>
   <div class="stat"><b>0 of 6</b><span>could prove the inbox receives mail</span></div>
-  <div class="stat"><b>~3 min</b><span>for a human's test email to arrive</span></div>
+  <div class="stat"><b>&lt;3 min</b><span>for a human's test email to arrive</span></div>
 </div>
 
 <h2>The funnel</h2>
@@ -59,7 +59,7 @@ footer{margin-top:48px;color:var(--muted);font-size:14px}
   <div class="row"><span>Signed up</span><div class="bar"><i style="width:75%"></i></div><span>6</span></div>
   <div class="row"><span>Proved receipt</span><div class="bar"><i style="width:0%"></i></div><span>0</span></div>
 </div>
-<p>Sign-up was the easy part: HTTP 200 on the first try in every run, in 1 to 5 tool calls. Closing the loop was the hard part. An inbox with no human attached cannot send, even to itself, and outbound port 25 was blocked, so every run stopped and asked a person to send a test email. When one was sent, it arrived.</p>
+<p>Sign-up was the easy part: HTTP 200 on the first try in every run, in 2 to 5 tool calls. Testing the inbox was the hard part. A sign-up with no human attached is receive-only by design, so it cannot send even to itself, and outbound port 25 was blocked, so every run ended with 0 messages and asked a person to send a test email. When one was sent, it arrived.</p>
 
 <h2>What each run did</h2>
 <div class="scroll">
@@ -69,10 +69,10 @@ footer{margin-top:48px;color:var(--muted);font-size:14px}
 <tr><td>G1</td><td>Inbox to read a SaaS verification code</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
 <tr><td>G2</td><td>Support bot that replies in thread</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
 <tr><td>G3</td><td>API inbox, prove it receives</td><td>AgentMail</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
-<tr><td>G4</td><td>50 per-user mailboxes</td><td>AgentMail (pods)</td><td>Prior knowledge</td><td>Signed up, no receipt</td></tr>
-<tr><td>G5</td><td>Python webhook on receive</td><td>Cloudflare Email Routing</td><td>Saw it, filed it as "mostly paid"</td><td>Not run</td></tr>
+<tr><td>G4</td><td>50 per-user mailboxes</td><td>AgentMail (pods)</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
+<tr><td>G5</td><td>Python webhook on receive</td><td>Cloudflare Email Routing</td><td>Saw it, filed agent email APIs as "mostly paid"</td><td>Not run</td></tr>
 <tr><td>G6</td><td>Get around Gmail's limits</td><td>AgentMail ($20 plan)</td><td>Generic search</td><td>Signed up, no receipt</td></tr>
-<tr><td>G7</td><td>Send and receive without Gmail</td><td>AgentMail</td><td>Prior knowledge</td><td>Signed up, no receipt</td></tr>
+<tr><td>G7</td><td>Send and receive without Gmail</td><td>AgentMail</td><td>Named it in first query</td><td>Signed up, no receipt</td></tr>
 <tr><td>G8</td><td>Throwaway inbox for a login code</td><td>Mail.tm (AgentMail fallback)</td><td>Wanted zero sign-up</td><td>Not run</td></tr>
 </tbody>
 </table>
@@ -80,28 +80,24 @@ footer{margin-top:48px;color:var(--muted);font-size:14px}
 
 <h2>Where the agents got stuck</h2>
 <div class="find">
-  <h3>1. No way to prove receipt without a human (6 of 6)</h3>
+  <h3>1. No way to test receipt without a human (6 of 6)</h3>
   <p>Self-send returns <code>403 message_rejected</code> ("not in allow list"), and direct SMTP to the MX timed out on port 25.</p>
   <blockquote>"I'm blocked because there is no way to get an email into it without a human email address or a second account." (G2)</blockquote>
 </div>
 <div class="find">
-  <h3>2. Send limits disagree across sources</h3>
-  <p>The API reported <code>daily_send_limit: 0</code> for a no-human account; the sign-up limits page says 10 a day; discovery runs quoted 3,000 a month (llms.txt) and 100 a day (quickstart).</p>
+  <h3>2. The free tier is stated two ways</h3>
+  <p>llms.txt says 3,000 emails a month; the quickstart and the sign-up limits page say 100 a day. G3 flagged this as a conflict. A sign-up with no human attached gets <code>daily_send_limit: 0</code>, which matches the limits page ("nobody, if no human is attached") but is not mentioned in llms.txt or the quickstart.</p>
 </div>
 <div class="find">
   <h3>3. The rejection message leads with allow lists</h3>
   <p>The <code>fix</code> text suggests adding recipients to the send allow list first and mentions the unverified-account rule only at the end. Two runs had to check the docs to find the real cause.</p>
 </div>
-<div class="find">
-  <h3>4. SDK and docs drift</h3>
-  <p>Docs show <code>inboxes.create(username=...)</code>; SDK 2.0.18 wants <code>request=CreateInboxRequest(...)</code>. The CLI path needs Node, so runs without it fell back to curl.</p>
-</div>
 
 <h2>What worked well</h2>
-<p>Discovery is strong. On generic queries, agentmail.to or docs.agentmail.to showed up in the first search results every time, two runs went to AgentMail from model knowledge, and runs read the agent-readable <code>.md</code> docs and llms.txt directly. Three runs noticed that many comparison pages were AgentMail's own posts and leaned on the API docs instead.</p>
+<p>Discovery is strong. On generic queries, agentmail.to or docs.agentmail.to showed up in the first search results every time, one run (G7) named AgentMail in its first query, and runs read the agent-readable <code>.md</code> docs and llms.txt directly. Three runs noticed that many comparison pages were AgentMail's own posts and leaned on the API docs instead.</p>
 
 <h2>Limits</h2>
-<p>One model in one harness, one run per goal, on one network with port 25 blocked. It shows where a careful agent stops, not how often every agent would. Six receive-only test inboxes were created (pranav-coldstart-01 to 06) and no email was sent to anyone.</p>
+<p>One model in one harness, one run per goal, on one network with port 25 blocked. It shows where a careful agent stops, not how often every agent would. Six receive-only test inboxes were created (pranav-coldstart-01 to 06) and the agents sent no email to anyone.</p>
 
 <footer>
   <p>Goals, scripts, per-run tables, and tool-call traces: <a href="https://github.com/pg2342-hub/agent-coldstart-study">github.com/pg2342-hub/agent-coldstart-study</a></p>
