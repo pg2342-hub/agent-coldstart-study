@@ -1,46 +1,39 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- demo-chrome --><meta name="theme-color" content="#f4f2ec"><link rel="icon" href="https://pranavgudise.dev/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="https://pranavgudise.dev/kit/demo.css"><!-- /demo-chrome -->
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent cold-start study</title>
 <meta name="description" content="8 fresh Claude Code runs were given a goal that needed an email inbox and no product name. 6 chose AgentMail, 6 signed up, 0 could prove receipt.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--fg:#111;--muted:#555;--line:#ddd;--bg:#fff;--soft:#f5f5f5}
-@media (prefers-color-scheme:dark){:root{--fg:#eee;--muted:#aaa;--line:#333;--bg:#111;--soft:#1b1b1b}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui,sans-serif}
-main{max-width:860px;margin:0 auto;padding:40px 16px 64px}
-h1{font-size:30px;line-height:1.2;margin:0 0 10px;letter-spacing:-.01em}
-h2{font-size:20px;margin:44px 0 12px}
+main{padding-bottom:24px}
 p{margin:0 0 14px}
-.lede{color:var(--muted);font-size:17px;max-width:680px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:28px 0}
-.stat{border:1px solid var(--line);border-radius:10px;padding:16px}
-.stat b{display:block;font-size:34px;line-height:1.1}
-.stat span{color:var(--muted);font-size:14px}
-.funnel{margin:8px 0 6px}
-.row{display:grid;grid-template-columns:150px 1fr 48px;align-items:center;gap:10px;margin:8px 0;font-size:14px}
-.bar{height:14px;background:var(--soft);border-radius:4px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--fg)}
-.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
-th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-weight:600;background:var(--soft)}
-tr:last-child td{border-bottom:0}
-.find{border-left:3px solid var(--fg);padding:2px 0 2px 14px;margin:18px 0}
-.find h3{margin:0 0 4px;font-size:16px}
-.find p{margin:0 0 6px;color:var(--muted)}
-code{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--soft);padding:1px 5px;border-radius:4px}
-blockquote{margin:6px 0;padding:0 0 0 12px;border-left:2px solid var(--line);color:var(--muted);font-size:14px}
-a{color:inherit}
-footer{margin-top:48px;color:var(--muted);font-size:14px}
-@media (max-width:520px){.row{grid-template-columns:110px 1fr 40px}h1{font-size:25px}}
+.lede{color:var(--ink-2);font-size:18px;max-width:42em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:40px 0}
+.stat{border:1px solid var(--rule);border-radius:16px;padding:18px 20px}
+.stat b{display:block;font:400 38px/1.1 var(--serif);font-variant-numeric:tabular-nums;margin-bottom:6px}
+.stat span{color:var(--ink-2);font-size:14px}
+.funnel{margin:8px 0 6px;max-width:760px}
+.row{display:grid;grid-template-columns:160px 1fr 48px;align-items:center;gap:12px;margin:10px 0;font-size:14px}
+.row>:last-child{font:400 13px/1 var(--mono);text-align:right}
+.bar{height:12px;background:var(--tint-1);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:999px}
+.scroll{overflow-x:auto;margin:16px 0}
+table{min-width:620px}
+.find{border-left:2px solid var(--green);padding:4px 0 4px 18px;margin:24px 0;max-width:46em}
+.find h3{margin:0 0 6px;font:400 21px/1.25 var(--serif)}
+.find p{margin:0 0 8px;color:var(--ink-2)}
+code{background:rgb(27 26 23/.05);padding:1px 5px;border-radius:4px}
+blockquote{margin:8px 0;padding:0 0 0 14px;border-left:2px solid var(--rule);color:var(--ink-2);font-size:14px}
+main>footer{margin-top:56px;color:var(--ink-2);font-size:14px}
+@media (max-width:520px){.row{grid-template-columns:110px 1fr 40px}}
 </style>
 </head>
 <body>
+<!-- demo-chrome --><header class="demo-top"><a class="demo-brand" href="https://pranavgudise.dev/"><svg class="demo-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><g class="n"><path class="f" d="M15.5 8.5 L 13.4 13.4 L 8.5 15.5 L 10.6 10.6 Z"/></g><circle class="p" cx="12" cy="12" r=".7"/></svg><span>Pranav Gudise</span></a><a class="pill" href="https://github.com/pg2342-hub/agent-coldstart-study">Code on GitHub</a></header><!-- /demo-chrome -->
+
 <main>
 <h1>Can a fresh coding agent get itself a working inbox?</h1>
 <p class="lede">I gave 8 fresh Claude Code runs a goal that needed email and never named a product. Each started in an empty folder with no memory, no MCP servers, and no project context. The runs that chose AgentMail were then allowed to sign up with no human email attached. Run on 2026-11-19 with Claude Code 2.1.328, for about $6.90 in total.</p>
@@ -104,5 +97,6 @@ footer{margin-top:48px;color:var(--muted);font-size:14px}
   <p>Pranav Gudise · <a href="https://www.linkedin.com/in/pranav-gudise/">LinkedIn</a></p>
 </footer>
 </main>
+<!-- demo-chrome --><footer class="demo-foot"><span>A working build by <a href="https://pranavgudise.dev/">Pranav Gudise</a>. Synthetic or public data only.</span><a href="https://github.com/pg2342-hub/agent-coldstart-study">github.com/pg2342-hub/agent-coldstart-study</a></footer><!-- /demo-chrome -->
 </body>
 </html>
